@@ -172,7 +172,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/${endPoint}`,
+        `${process.env.REACT_APP_BACKEND_URL}/auth/${endPoint}`,
         currentUser
       );
 
