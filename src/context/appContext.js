@@ -172,7 +172,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/${endPoint}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/${endPoint}`,
         currentUser
       );
 
@@ -199,14 +199,14 @@ const AppProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
-    await authFetch.get(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`);
+    await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`);
     dispatch({ type: LOGOUT_USER });
   };
 
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
-      const { data } = await authFetch.patch(
+      const { data } = await axios.patch(
         `${process.env.REACT_APP_BACKEND_URL}/auth/updateUser`,
         currentUser
       );
@@ -239,7 +239,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { position, jobLocation, company, jobType, status } = state;
-      await authFetch.post(`${process.env.REACT_APP_BACKEND_URL}/jobs`, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/jobs`, {
         position,
         company,
         jobLocation,
@@ -269,7 +269,7 @@ const AppProvider = ({ children }) => {
     }
     dispatch({ type: GET_JOB_BEGIN });
     try {
-      const { data } = await authFetch.get(url);
+      const { data } = await axios.get(url);
       const { jobs, numOfPages, totalJobs } = data;
 
       dispatch({
@@ -292,7 +292,7 @@ const AppProvider = ({ children }) => {
     const { position, company, jobType, status, jobLocation, editJobId } =
       state;
     try {
-      await authFetch.patch(
+      await axios.patch(
         `${process.env.REACT_APP_BACKEND_URL}/jobs/${editJobId}`,
         {
           position,
@@ -318,9 +318,7 @@ const AppProvider = ({ children }) => {
   const deleteJob = async (jobId) => {
     dispatch({ type: DELETE_JOB_BEGIN });
     try {
-      await authFetch.delete(
-        `${process.env.REACT_APP_BACKEND_URL}/jobs/${jobId}`
-      );
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/jobs/${jobId}`);
       getJobs();
     } catch (error) {
       if (error.response.status === 401) return;
@@ -335,7 +333,7 @@ const AppProvider = ({ children }) => {
   const showStats = async () => {
     dispatch({ type: SHOW_STATS_BEGIN });
     try {
-      const { data } = await authFetch(
+      const { data } = await axios(
         `${process.env.REACT_APP_BACKEND_URL}/jobs/stats`
       );
       const { defaultStats, monthlyApplications } = data;
@@ -358,7 +356,7 @@ const AppProvider = ({ children }) => {
   const getCurrentUser = async () => {
     dispatch({ type: GET_CURRENT_USER_BEGIN });
     try {
-      const { data } = await authFetch(
+      const { data } = await axios(
         `${process.env.REACT_APP_BACKEND_URL}/auth/getCurrentUser`
       );
       const { user, location } = data;
