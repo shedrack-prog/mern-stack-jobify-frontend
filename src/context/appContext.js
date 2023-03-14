@@ -75,15 +75,15 @@ const AppProvider = ({ children }) => {
     baseURL: '/api/v1',
   });
   // request interceptor
-  // authFetch.interceptors.request.use(
-  //   (config) => {
-  //     config.headers["Authorization"] = `Bearer ${state.token}`;
-  //     return config;
-  //   },
-  //   (error) => {
-  //     return Promise.reject(error);
-  //   }
-  // );
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers['Authorization'] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
   // response interceptors
   authFetch.interceptors.response.use(
     (response) => {
@@ -345,8 +345,8 @@ const AppProvider = ({ children }) => {
         payload: { stats: defaultStats, monthlyApplications },
       });
     } catch (error) {
-      // if (error.response.status === 401) return;
-      // logoutUser();
+      if (error.response.status === 401) return;
+      logoutUser();
     }
   };
   const clearFilters = () => {
