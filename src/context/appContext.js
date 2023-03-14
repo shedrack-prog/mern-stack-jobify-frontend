@@ -345,8 +345,8 @@ const AppProvider = ({ children }) => {
         payload: { stats: defaultStats, monthlyApplications },
       });
     } catch (error) {
-      if (error.response.status === 401) return;
-      logoutUser();
+      // if (error.response.status === 401) return;
+      // logoutUser();
     }
   };
   const clearFilters = () => {
