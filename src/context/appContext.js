@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useReducer } from "react";
-import reducer from "./reducer";
-import axios from "axios";
+import React, { useContext, useEffect, useReducer } from 'react';
+import reducer from './reducer';
+import axios from 'axios';
 
 import {
   DISPLAY_ALERT,
@@ -32,37 +32,37 @@ import {
   DELETE_JOB_ERROR,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
-} from "./actions";
+} from './actions';
 
 const initialState = {
   userLoading: true,
   isLoading: false,
   showAlert: false,
-  alertText: "",
-  alertType: "",
+  alertText: '',
+  alertType: '',
   user: null,
-  userLocation: "",
+  userLocation: '',
   showSidebar: false,
   isEditing: false,
-  editJobId: "",
-  position: "",
-  company: "",
-  jobLocation: "",
-  jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
-  jobType: "full-time",
-  statusOptions: ["interview", "declined", "pending"],
-  status: "pending",
+  editJobId: '',
+  position: '',
+  company: '',
+  jobLocation: '',
+  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
+  jobType: 'full-time',
+  statusOptions: ['interview', 'declined', 'pending'],
+  status: 'pending',
   jobs: [],
   totalJobs: 0,
   numOfPages: 1,
   page: 1,
   stats: {},
   monthlyApplications: [],
-  search: "",
-  searchStatus: "all",
-  searchType: "all",
-  sort: "latest",
-  sortOptions: ["latest", "oldest", "a-z", "z-a"],
+  search: '',
+  searchStatus: 'all',
+  searchType: 'all',
+  sort: 'latest',
+  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
 };
 
 const AppContext = React.createContext();
@@ -72,7 +72,7 @@ const AppProvider = ({ children }) => {
 
   // axios instance
   const authFetch = axios.create({
-    baseURL: "/api/v1",
+    baseURL: '/api/v1',
   });
   // request interceptor
   // authFetch.interceptors.request.use(
@@ -172,7 +172,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { data } = await axios.post(
-        `/api/v1/auth/${endPoint}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/${endPoint}`,
         currentUser
       );
 
@@ -199,14 +199,17 @@ const AppProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
-    await authFetch.get("/auth/logout");
+    await authFetch.get(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`);
     dispatch({ type: LOGOUT_USER });
   };
 
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
-      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+      const { data } = await authFetch.patch(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/updateUser`,
+        currentUser
+      );
       const { user, location } = data;
       dispatch({
         type: UPDATE_USER_SUCCESS,
@@ -236,7 +239,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { position, jobLocation, company, jobType, status } = state;
-      await authFetch.post("/jobs", {
+      await authFetch.post(`${process.env.REACT_APP_BACKEND_URL}/jobs`, {
         position,
         company,
         jobLocation,
@@ -259,7 +262,7 @@ const AppProvider = ({ children }) => {
   // get jobs
   const getJobs = async () => {
     const { page, search, searchType, searchStatus, sort } = state;
-    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    let url = `${process.env.REACT_APP_BACKEND_URL}/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
 
     if (search) {
       url = url + `&search=${search}`;
@@ -289,13 +292,16 @@ const AppProvider = ({ children }) => {
     const { position, company, jobType, status, jobLocation, editJobId } =
       state;
     try {
-      await authFetch.patch(`/jobs/${editJobId}`, {
-        position,
-        company,
-        status,
-        jobLocation,
-        jobType,
-      });
+      await authFetch.patch(
+        `${process.env.REACT_APP_BACKEND_URL}/jobs/${editJobId}`,
+        {
+          position,
+          company,
+          status,
+          jobLocation,
+          jobType,
+        }
+      );
       dispatch({ type: EDIT_JOB_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
@@ -312,7 +318,9 @@ const AppProvider = ({ children }) => {
   const deleteJob = async (jobId) => {
     dispatch({ type: DELETE_JOB_BEGIN });
     try {
-      await authFetch.delete(`/jobs/${jobId}`);
+      await authFetch.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/jobs/${jobId}`
+      );
       getJobs();
     } catch (error) {
       if (error.response.status === 401) return;
@@ -327,7 +335,9 @@ const AppProvider = ({ children }) => {
   const showStats = async () => {
     dispatch({ type: SHOW_STATS_BEGIN });
     try {
-      const { data } = await authFetch("/jobs/stats");
+      const { data } = await authFetch(
+        `${process.env.REACT_APP_BACKEND_URL}/jobs/stats`
+      );
       const { defaultStats, monthlyApplications } = data;
 
       dispatch({
@@ -348,7 +358,9 @@ const AppProvider = ({ children }) => {
   const getCurrentUser = async () => {
     dispatch({ type: GET_CURRENT_USER_BEGIN });
     try {
-      const { data } = await authFetch("/auth/getCurrentUser");
+      const { data } = await authFetch(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/getCurrentUser`
+      );
       const { user, location } = data;
       dispatch({ type: GET_CURRENT_USER_SUCCESS, payload: { user, location } });
     } catch (error) {
