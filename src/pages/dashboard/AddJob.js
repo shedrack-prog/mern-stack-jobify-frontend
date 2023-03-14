@@ -1,7 +1,6 @@
-import { FormRow, Alert, FormRowSelect } from "../../components";
-import { useAppContext } from "../../context/appContext";
-import Wrapper from "../../assets/wrappers/DashboardFormPage";
-import e from "cors";
+import { FormRow, Alert, FormRowSelect } from '../../components';
+import { useAppContext } from '../../context/appContext';
+import Wrapper from '../../assets/wrappers/DashboardFormPage';
 
 const AddJob = () => {
   const {
@@ -45,7 +44,7 @@ const AddJob = () => {
   return (
     <Wrapper>
       <form className="form">
-        <h3>{isEditing ? "edit job" : "add job"} </h3>
+        <h3>{isEditing ? 'edit job' : 'add job'} </h3>
         {showAlert && <Alert />}
 
         {/* position */}
@@ -95,7 +94,7 @@ const AddJob = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              {isLoading ? "Please wait" : "submit"}
+              {isLoading ? 'Please wait' : 'submit'}
             </button>
             <button
               className="btn btn-block clear-btn"
